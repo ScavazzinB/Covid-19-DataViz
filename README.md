@@ -1,46 +1,142 @@
-# Getting Started with Create React App
+# COVID-19 Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Dashboard en temps réel pour suivre les données COVID-19 dans le monde, basé sur les données de Johns Hopkins University.
 
-## Available Scripts
+## 📊 Fonctionnalités
 
-In the project directory, you can run:
+- ✅ Statistiques globales en temps réel
+- 📈 Graphiques d'évolution temporelle
+- 🌍 Liste des pays avec détails
+- 🔍 Recherche de pays
+- 📱 Interface responsive
+- ⚡ Indicateurs de chargement
+- 🚨 Gestion d'erreurs robuste
 
-### `npm start`
+## 🛠️ Stack Technique
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- **Frontend**: React 19 + TypeScript
+- **Graphiques**: Chart.js + react-chartjs-2
+- **Données**: API Johns Hopkins University
+- **Parsing CSV**: PapaParse
+- **Styling**: CSS3 + Design responsive
+- **Tests**: Jest + Testing Library
+- **Qualité de code**: ESLint + Prettier
+- **Déploiement**: Vercel
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 🚀 Installation
 
-### `npm test`
+```bash
+# Cloner le repository
+git clone <repository-url>
+cd covid-dashboard
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Installer les dépendances
+npm install
 
-### `npm run build`
+# Lancer en développement
+npm start
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+L'application sera disponible à `http://localhost:3000`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 📜 Scripts Disponibles
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+# Développement
+npm start              # Démarrer le serveur de développement
+npm run build          # Build de production
+npm test               # Lancer les tests
+npm run test:coverage  # Tests avec couverture
 
-### `npm run eject`
+# Qualité de code
+npm run lint           # Vérifier ESLint
+npm run lint:fix       # Corriger automatiquement les erreurs ESLint
+npm run format         # Formater avec Prettier
+npm run typecheck      # Vérifier les types TypeScript
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## 📁 Structure du Projet
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
+src/
+├── components/           # Composants React réutilisables
+│   ├── GlobalStats.tsx   # Cartes de statistiques
+│   ├── TrendsChart.tsx   # Graphiques d'évolution
+│   ├── CountryComparison.tsx # Liste et comparaison des pays
+│   ├── Header.tsx        # En-tête de l'application
+│   └── WorldMap.tsx      # Carte du monde (future implémentation)
+├── services/            # Services et API
+│   └── api.ts           # Service pour récupérer les données Johns Hopkins
+├── types/               # Interfaces TypeScript
+├── utils/               # Utilitaires et helpers
+├── hooks/               # Hooks React personnalisés
+├── App.tsx              # Composant principal
+└── index.tsx            # Point d'entrée
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## 🌐 Sources de Données
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Les données proviennent du [repository COVID-19 de Johns Hopkins](https://github.com/CSSEGISandData/COVID-19):
 
-## Learn More
+- **Cas confirmés**: https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv
+- **Décès**: https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv
+- **Guérisons**: https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 🧪 Tests
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+# Lancer tous les tests
+npm test
+
+# Tests en mode watch
+npm test -- --watch
+
+# Générer le rapport de couverture
+npm run test:coverage
+```
+
+## 📱 Responsive Design
+
+L'application est optimisée pour :
+- 🖥️ Desktop (1200px+)
+- 📱 Tablet (768px - 1199px)
+- 📱 Mobile (320px - 767px)
+
+## 🔧 Variables d'Environnement
+
+Créer un fichier `.env` à la racine :
+
+```env
+REACT_APP_API_BASE_URL=https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series
+```
+
+## 🚀 Déploiement
+
+### Vercel (Recommandé)
+
+1. Connecter le repository GitHub à Vercel
+2. Les variables d'environnement seront configurées automatiquement
+3. Le déploiement se fait à chaque push sur `main`
+
+### Autres plateformes
+
+```bash
+npm run build
+# Déployer le contenu du dossier `build/`
+```
+
+## 🤝 Contribution
+
+1. Fork le projet
+2. Créer une branche (`git checkout -b feature/nouvelle-fonctionnalite`)
+3. Commit les changements (`git commit -m 'Ajout nouvelle fonctionnalité'`)
+4. Push vers la branche (`git push origin feature/nouvelle-fonctionnalite`)
+5. Ouvrir une Pull Request
+
+## 📄 Licence
+
+Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
+
+## 📞 Support
+
+Pour toute question ou problème, ouvrir une [issue](https://github.com/votre-username/covid-dashboard/issues) sur GitHub.

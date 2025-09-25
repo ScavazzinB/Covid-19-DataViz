@@ -1,0 +1,18 @@
+{
+  "low": true,
+  "moderate": true,
+  "high": true,
+  "critical": true,
+  "report-type": "summary",
+  "advisories": [],
+  "whitelist": [],
+  "skip-dev": false,
+  "path": ".",
+  "show-found": true,
+  "show-not-found": false,
+  "registry": "https://registry.npmjs.org/",
+  "report": {
+    "format": ["json", "text"],
+    "output": "./audit-results"
+  }
+}
