@@ -148,4 +148,4 @@ vercel logs
 
 ---
 
-**🚀 Votre dashboard est maintenant prêt pour la production !**
+**🚀 Dashboard ready for production deployment!**
