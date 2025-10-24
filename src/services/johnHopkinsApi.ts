@@ -6,8 +6,11 @@ import {
   CountryData,
   GlobalStats,
   TimeSeriesPoint,
-  ApiEndpoints
+  ApiEndpoints,
+  ContinentData,
+  ContinentTimeSeriesPoint
 } from '../types/covid';
+import { getContinent, CONTINENTS } from '../utils/continentMapping';
 
 class JohnHopkinsApiService {
   private baseUrl: string;
@@ -250,6 +253,171 @@ class JohnHopkinsApiService {
         deaths: dayTotals.deaths,
         recovered: dayTotals.recovered,
         active: dayTotals.confirmed - dayTotals.deaths - dayTotals.recovered
+      };
+    });
+  }
+
+  async getCountryTimeSeriesData(countries: string[], days: number = 30): Promise<Map<string, TimeSeriesPoint[]>> {
+    const { confirmed, deaths, recovered } = await this.getAllData();
+
+    if (confirmed.length === 0) {
+      throw new Error('No confirmed data available');
+    }
+
+    // Get all dates from the first entry
+    const allDates = Object.keys(confirmed[0].data).sort();
+    const recentDates = allDates.slice(-days);
+
+    const result = new Map<string, TimeSeriesPoint[]>();
+
+    countries.forEach(country => {
+      const countryTimeSeries: TimeSeriesPoint[] = recentDates.map(date => {
+        const dayTotals = {
+          confirmed: 0,
+          deaths: 0,
+          recovered: 0
+        };
+
+        // Sum all provinces for this country and date
+        confirmed.forEach(entry => {
+          if (entry.countryRegion === country) {
+            dayTotals.confirmed += entry.data[date] || 0;
+          }
+        });
+
+        deaths.forEach(entry => {
+          if (entry.countryRegion === country) {
+            dayTotals.deaths += entry.data[date] || 0;
+          }
+        });
+
+        recovered.forEach(entry => {
+          if (entry.countryRegion === country) {
+            dayTotals.recovered += entry.data[date] || 0;
+          }
+        });
+
+        return {
+          date,
+          confirmed: dayTotals.confirmed,
+          deaths: dayTotals.deaths,
+          recovered: dayTotals.recovered,
+          active: dayTotals.confirmed - dayTotals.deaths - dayTotals.recovered
+        };
+      });
+
+      result.set(country, countryTimeSeries);
+    });
+
+    return result;
+  }
+
+  async getContinentData(): Promise<ContinentData[]> {
+    const countryData = await this.getLatestCountryData();
+
+    const continentMap = new Map<string, {
+      countries: string[];
+      confirmed: number;
+      deaths: number;
+      recovered: number;
+    }>();
+
+    // Initialize continents
+    CONTINENTS.forEach(continent => {
+      continentMap.set(continent, {
+        countries: [],
+        confirmed: 0,
+        deaths: 0,
+        recovered: 0
+      });
+    });
+
+    // Aggregate by continent
+    countryData.forEach(country => {
+      const continent = getContinent(country.country);
+      const continentData = continentMap.get(continent);
+
+      if (continentData) {
+        continentData.countries.push(country.country);
+        continentData.confirmed += country.confirmed;
+        continentData.deaths += country.deaths;
+        continentData.recovered += country.recovered;
+      }
+    });
+
+    const currentDate = new Date().toISOString().split('T')[0];
+
+    return Array.from(continentMap.entries()).map(([continent, data]) => {
+      const active = data.confirmed - data.deaths - data.recovered;
+      const mortalityRate = data.confirmed > 0 ? (data.deaths / data.confirmed) * 100 : 0;
+      const recoveryRate = data.confirmed > 0 ? (data.recovered / data.confirmed) * 100 : 0;
+
+      return {
+        continent,
+        countries: data.countries,
+        confirmed: data.confirmed,
+        deaths: data.deaths,
+        recovered: data.recovered,
+        active: Math.max(0, active),
+        mortalityRate: Math.round(mortalityRate * 100) / 100,
+        recoveryRate: Math.round(recoveryRate * 100) / 100,
+        lastUpdate: currentDate
+      };
+    }).filter(c => c.confirmed > 0).sort((a, b) => b.confirmed - a.confirmed);
+  }
+
+  async getContinentTimeSeriesData(days: number = 30): Promise<ContinentTimeSeriesPoint[]> {
+    const { confirmed, deaths, recovered } = await this.getAllData();
+
+    if (confirmed.length === 0) {
+      throw new Error('No confirmed data available');
+    }
+
+    const allDates = Object.keys(confirmed[0].data).sort();
+    const recentDates = allDates.slice(-days);
+
+    return recentDates.map(date => {
+      const continentTotals: { [continent: string]: { confirmed: number; deaths: number; recovered: number; } } = {};
+
+      // Initialize continents
+      CONTINENTS.forEach(continent => {
+        continentTotals[continent] = { confirmed: 0, deaths: 0, recovered: 0 };
+      });
+
+      // Sum by continent for this date
+      confirmed.forEach(entry => {
+        const continent = getContinent(entry.countryRegion);
+        if (continentTotals[continent]) {
+          continentTotals[continent].confirmed += entry.data[date] || 0;
+        }
+      });
+
+      deaths.forEach(entry => {
+        const continent = getContinent(entry.countryRegion);
+        if (continentTotals[continent]) {
+          continentTotals[continent].deaths += entry.data[date] || 0;
+        }
+      });
+
+      recovered.forEach(entry => {
+        const continent = getContinent(entry.countryRegion);
+        if (continentTotals[continent]) {
+          continentTotals[continent].recovered += entry.data[date] || 0;
+        }
+      });
+
+      const continents: { [continent: string]: { confirmed: number; deaths: number; recovered: number; active: number; } } = {};
+
+      Object.entries(continentTotals).forEach(([continent, totals]) => {
+        continents[continent] = {
+          ...totals,
+          active: totals.confirmed - totals.deaths - totals.recovered
+        };
+      });
+
+      return {
+        date,
+        continents
       };
     });
   }

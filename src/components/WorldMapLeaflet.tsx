@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet';
 import type { LatLngExpression } from 'leaflet';
 import axios from 'axios';
@@ -23,6 +24,7 @@ interface WorldMapLeafletProps {
 }
 
 const WorldMapLeaflet: React.FC<WorldMapLeafletProps> = ({ className = '' }) => {
+  const navigate = useNavigate();
   const [countriesData, setCountriesData] = useState<CountryData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -192,6 +194,12 @@ const WorldMapLeaflet: React.FC<WorldMapLeafletProps> = ({ className = '' }) => 
                       <span className="stat-value">{formatNumber(country.active)}</span>
                     </div>
                   </div>
+                  <button
+                    className="popup-detail-button"
+                    onClick={() => navigate(`/country/${encodeURIComponent(country.country)}`)}
+                  >
+                    📊 Voir les détails complets
+                  </button>
                 </div>
               </Popup>
             </CircleMarker>

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import johnHopkinsApi from '../services/johnHopkinsApi';
-import { CountryData, GlobalStats, TimeSeriesPoint } from '../types/covid';
+import { CountryData, GlobalStats, TimeSeriesPoint, ContinentData, ContinentTimeSeriesPoint } from '../types/covid';
 import { validateCountryData, validateGlobalStats, validateTimeSeriesData } from '../utils/dataValidation';
 
 interface UseCovidDataState {
@@ -213,5 +213,113 @@ export const useTimeSeriesData = (days: number = 30) => {
     loading,
     error,
     refetch: fetchTimeSeriesData
+  };
+};
+
+// Hook for multi-country comparison
+export const useMultiCountryComparison = (countries: string[], days: number = 30) => {
+  const [data, setData] = useState<Map<string, TimeSeriesPoint[]>>(new Map());
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = useCallback(async () => {
+    if (countries.length === 0) {
+      setData(new Map());
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const countryData = await johnHopkinsApi.getCountryTimeSeriesData(countries, days);
+      setData(countryData);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch country comparison data';
+      setError(errorMessage);
+      console.error('Error fetching multi-country data:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [countries, days]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  return {
+    data,
+    loading,
+    error,
+    refetch: fetchData
+  };
+};
+
+// Hook for continent data
+export const useContinentData = () => {
+  const [continentData, setContinentData] = useState<ContinentData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await johnHopkinsApi.getContinentData();
+      setContinentData(data);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch continent data';
+      setError(errorMessage);
+      console.error('Error fetching continent data:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  return {
+    continentData,
+    loading,
+    error,
+    refetch: fetchData
+  };
+};
+
+// Hook for continent time series data
+export const useContinentTimeSeries = (days: number = 30) => {
+  const [data, setData] = useState<ContinentTimeSeriesPoint[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const timeSeriesData = await johnHopkinsApi.getContinentTimeSeriesData(days);
+      setData(timeSeriesData);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch continent time series';
+      setError(errorMessage);
+      console.error('Error fetching continent time series:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [days]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  return {
+    data,
+    loading,
+    error,
+    refetch: fetchData
   };
 };

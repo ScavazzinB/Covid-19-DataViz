@@ -118,6 +118,35 @@
 .stat-item.recovered .stat-value { color: var(--recovered-color); }
 .stat-item.active .stat-value { color: var(--active-color); }
 
+/* Popup detail button */
+.popup-detail-button {
+  width: 100%;
+  margin-top: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.popup-detail-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+.popup-detail-button:active {
+  transform: translateY(0);
+}
+
 /* Legend */
 .map-legend-leaflet {
   position: absolute;

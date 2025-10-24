@@ -1,0 +1,266 @@
+.error-boundary {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+}
+
+.error-boundary-container {
+  max-width: 600px;
+  width: 100%;
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.error-icon {
+  font-size: 72px;
+  margin-bottom: 20px;
+  animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
+}
+
+.error-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #dc2626;
+  margin: 0 0 16px 0;
+}
+
+.error-message {
+  font-size: 16px;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0 0 24px 0;
+}
+
+.error-details-container {
+  margin: 24px 0;
+}
+
+.error-details {
+  background: #f9fafb;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: left;
+}
+
+.error-details summary {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  user-select: none;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.error-details summary:hover {
+  background: #f3f4f6;
+}
+
+.error-stack {
+  margin-top: 16px;
+  padding: 16px;
+  background: #111827;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.error-name {
+  font-size: 13px;
+  color: #ef4444;
+  font-family: 'Courier New', monospace;
+  margin: 0 0 12px 0;
+  word-break: break-word;
+}
+
+.error-component-stack {
+  font-size: 12px;
+  color: #9ca3af;
+  font-family: 'Courier New', monospace;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+.error-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.error-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.error-button.primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.error-button.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+}
+
+.error-button.secondary {
+  background: #f3f4f6;
+  color: #374151;
+  border: 2px solid #e5e7eb;
+}
+
+.error-button.secondary:hover {
+  background: #e5e7eb;
+  transform: translateY(-2px);
+}
+
+.error-button:active {
+  transform: translateY(0);
+}
+
+.error-help {
+  background: #f0fdf4;
+  border: 2px solid #86efac;
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 14px;
+  color: #166534;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.error-help p {
+  margin: 0;
+}
+
+.error-help p + p {
+  margin-top: 8px;
+}
+
+.error-help strong {
+  color: #14532d;
+  font-weight: 700;
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+  .error-boundary {
+    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+  }
+
+  .error-boundary-container {
+    background: #1f2937;
+  }
+
+  .error-title {
+    color: #fca5a5;
+  }
+
+  .error-message {
+    color: #9ca3af;
+  }
+
+  .error-details {
+    background: #111827;
+    border-color: #374151;
+  }
+
+  .error-details summary {
+    color: #e5e7eb;
+  }
+
+  .error-details summary:hover {
+    background: #1f2937;
+  }
+
+  .error-button.secondary {
+    background: #374151;
+    color: #f9fafb;
+    border-color: #4b5563;
+  }
+
+  .error-button.secondary:hover {
+    background: #4b5563;
+  }
+
+  .error-help {
+    background: #064e3b;
+    border-color: #059669;
+    color: #d1fae5;
+  }
+
+  .error-help strong {
+    color: #a7f3d0;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .error-boundary-container {
+    padding: 24px;
+  }
+
+  .error-icon {
+    font-size: 56px;
+  }
+
+  .error-title {
+    font-size: 22px;
+  }
+
+  .error-message {
+    font-size: 14px;
+  }
+
+  .error-actions {
+    flex-direction: column;
+  }
+
+  .error-button {
+    width: 100%;
+  }
+}

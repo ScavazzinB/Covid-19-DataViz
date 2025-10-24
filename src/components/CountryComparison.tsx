@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCountryData } from '../hooks/useCovidData';
 import { formatNumber, formatPercentage } from '../utils/formatters';
 import { CountryData } from '../types/covid';
@@ -12,6 +13,7 @@ type SortKey = keyof CountryData;
 type SortOrder = 'asc' | 'desc';
 
 const CountryComparison: React.FC<CountryComparisonProps> = ({ className = '' }) => {
+  const navigate = useNavigate();
   const { countryData, loading, error, refetch } = useCountryData();
   const [searchQuery, setSearchQuery] = useState('');
   const [sortKey, setSortKey] = useState<SortKey>('confirmed');
@@ -204,7 +206,13 @@ const CountryComparison: React.FC<CountryComparisonProps> = ({ className = '' })
             </thead>
             <tbody>
               {filteredAndSortedData.map((country, index) => (
-                <tr key={country.country} className={index % 2 === 0 ? 'even' : 'odd'}>
+                <tr
+                  key={country.country}
+                  className={index % 2 === 0 ? 'even' : 'odd'}
+                  onClick={() => navigate(`/country/${encodeURIComponent(country.country)}`)}
+                  style={{ cursor: 'pointer' }}
+                  title={`Voir les détails de ${country.country}`}
+                >
                   <td className="country-name">
                     <span className="country-flag">
                       {getCountryFlag(country.country)}

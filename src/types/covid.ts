@@ -49,3 +49,27 @@ export interface ApiEndpoints {
   deaths: string;
   recovered: string;
 }
+
+export interface ContinentData {
+  continent: string;
+  countries: string[];
+  confirmed: number;
+  deaths: number;
+  recovered: number;
+  active: number;
+  mortalityRate: number;
+  recoveryRate: number;
+  lastUpdate: string;
+}
+
+export interface ContinentTimeSeriesPoint {
+  date: string;
+  continents: {
+    [continent: string]: {
+      confirmed: number;
+      deaths: number;
+      recovered: number;
+      active: number;
+    };
+  };
+}
